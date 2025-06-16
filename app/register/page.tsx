@@ -98,15 +98,15 @@ export default function Register() {
     <>
       <div className="fixed inset-0 bg-[#2E3440] overflow-hidden"></div>
 
-      <div className="flex flex-row absolute gap-5 top-23 -left-1">
-        <p className="text-[7.9rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-[#D8DEE9]">
+      <div className="flex flex-row absolute gap-5 top-14 left-1/2 -translate-x-1/2">
+        <p className="text-[7.4rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-[#D8DEE9]">
           SIGN
         </p>
-        <p className="text-[7.9rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-transparent [-webkit-text-stroke:0.5px_#D8DEE9]">
+        <p className="text-[7.4rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-transparent [-webkit-text-stroke:2px_#D8DEE9]">
           UP
         </p>
       </div>
-      <div className="p-8 bg-[#4C566A] w-[95%] mx-auto rounded-xl mt-54 animate-fade-in-up animate-delay-400 shadow-[0_0_17px_rgba(0,0,0,1)] relative z-10">
+      <div className="p-8 bg-[#4C566A] w-[95%] mx-auto rounded-xl mt-42 animate-fade-in-up animate-delay-400 shadow-[0_0_17px_rgba(0,0,0,1)] relative z-10">
         <div className="">
           <h1 className="text-3xl font-semibold font-poppins text-[#ECEFF4]">
             Welcome to ZeroCode
