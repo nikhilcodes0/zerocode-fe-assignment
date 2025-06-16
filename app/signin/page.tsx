@@ -12,10 +12,57 @@ import {
   FaLock,
 } from "react-icons/fa";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
+import { useRouter } from "next/navigation";
 
 export default function Login() {
+  const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    try {
+      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (signInError) throw signInError;
+
+      router.push("/chat");
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSocialLogin = async (provider: "google" | "github" | "apple") => {
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider,
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) throw error;
+    } catch (err: any) {
+      setError(err.message);
+    } 
+  };
   return (
     <>
       <div className="fixed inset-0 bg-[#2E3440] overflow-hidden">
@@ -46,6 +93,11 @@ export default function Login() {
           </p>
         </div>
         <div className="mt-12">
+          {error && (
+            <div className="mb-4 p-4 rounded-md bg-[#BF616A] text-[#ECEFF4] text-sm">
+              {error}
+            </div>
+          )}
           <form>
             <div className="flex flex-col gap-4">
               
@@ -55,6 +107,10 @@ export default function Login() {
                   type="email"
                   placeholder="Email"
                   className="p-4 pl-12 rounded-xl border border-[#3B4252] bg-[#2E3440] text-[#D8DEE9] placeholder-[#4C566A] focus:outline-none focus:border-[#88C0D0] transition-colors w-full"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
                 />
               </div>
               <div className="relative">
@@ -63,6 +119,10 @@ export default function Login() {
                   type={showPassword ? "text" : "password"}
                   placeholder="Password"
                   className="p-4 pl-12 rounded-xl border border-[#3B4252] bg-[#2E3440] text-[#D8DEE9] placeholder-[#4C566A] w-full focus:outline-none focus:border-[#88C0D0] transition-colors"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleChange}
+                  required
                 />
                 <button
                   type="button"
@@ -75,8 +135,10 @@ export default function Login() {
               <button
                 type="submit"
                 className="p-4 rounded-xl bg-[#5E81AC] text-[#ECEFF4] font-semibold hover:bg-[#81A1C1] transition-colors"
+                disabled={loading}
+                onClick={handleSubmit}
               >
-                Login
+                {loading ? "Logging in..." : "Login"}
               </button>
             </div>
           </form>
