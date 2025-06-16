@@ -3,19 +3,12 @@
 import Image from "next/image";
 import union from "@/public/Union.png";
 import heroLogo from "@/public/hero-logo.png";
-
 import Link from "next/link";
 
 export default function App() {
   return (
     <>
-      <div
-        className="relative h-[560px] w-screen"
-        style={{
-          background:
-            "linear-gradient(180deg, rgba(255, 240, 200, 1) 0%, rgba(200, 255, 242, 1) 50%, rgba(200, 222, 255, 0) 100%)",
-        }}
-      >
+      <div className="relative h-[560px] w-screen dark:[background:linear-gradient(180deg,rgba(40,40,40,1)_0%,rgba(30,50,60,1)_50%,rgba(20,30,40,0)_100%)] [background:linear-gradient(180deg,rgba(255,240,200,1)_0%,rgba(200,255,242,1)_50%,rgba(200,222,255,0)_100%)]">
         <Image
           src={union}
           alt="union"
@@ -23,7 +16,7 @@ export default function App() {
           height={300}
           priority
           style={{ objectFit: "contain" }}
-          className="w-full h-fit absolute top-0 left-0 animate-fade-in-up"
+          className="w-full h-fit absolute top-0 left-0 animate-fade-in-up dark:invert"
         />
         <Image
           src={heroLogo}
@@ -45,7 +38,7 @@ export default function App() {
         <div className="flex justify-center items-center w-full">
           <Link
             href="/register"
-            className="cursor-pointer bg-black text-white py-4 w-full rounded-xl font-semibold hover:bg-black hover:text-white transition-all duration-300 text-center"
+            className="cursor-pointer bg-black dark:bg-white text-white dark:text-black py-4 w-full rounded-xl font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 text-center"
           >
             Get Started
           </Link>
@@ -53,7 +46,7 @@ export default function App() {
         <div className="flex justify-center items-center w-full">
           <Link
             href="/signin"
-            className="cursor-pointer border-black border-2 text-black py-4 w-full rounded-xl font-semibold hover:bg-black hover:text-white transition-all duration-300 text-center"
+            className="cursor-pointer border-black dark:border-white border-2 text-black dark:text-white py-4 w-full rounded-xl font-semibold hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all duration-300 text-center"
           >
             SignIn
           </Link>
