@@ -2,7 +2,13 @@
 
 import logo from "@/public/logo.png";
 import Image from "next/image";
-import { FaMoon, FaPaperPlane, FaSignOutAlt, FaSun } from "react-icons/fa";
+import {
+  FaMoon,
+  FaPaperPlane,
+  FaSignOutAlt,
+  FaSun,
+  FaDownload,
+} from "react-icons/fa";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
@@ -142,6 +148,34 @@ export default function Chat() {
     }
   };
 
+  const exportChat = () => {
+    // Create a formatted string of the chat
+    const chatText = messages
+      .map((msg) => {
+        const timestamp = msg.timestamp.toLocaleString();
+        const sender = msg.isUser ? "You" : "ZeroCode";
+        return `[${timestamp}] ${sender}: ${msg.content}`;
+      })
+      .join("\n\n");
+
+    // Create a blob with the chat text
+    const blob = new Blob([chatText], { type: "text/plain" });
+
+    // Create a download link
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `zerocode-chat-${new Date().toISOString().split("T")[0]}.txt`;
+
+    // Trigger the download
+    document.body.appendChild(a);
+    a.click();
+
+    // Clean up
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
+
   return (
     <>
       <div className="absolute top-0 right-0 z-10 p-2 flex flex-row gap-2 w-full shadow-lg justify-between items-center px-4">
@@ -157,6 +191,13 @@ export default function Chat() {
             className="bg-[#ECEFF4] dark:bg-[#5E81AC] text-[#2E3440] dark:text-[#ECEFF4] p-4 rounded-md flex items-center gap-2 z-10 hover:bg-[#81A1C1] transition-colors hover:scale-105 duration-300"
           >
             <FaSignOutAlt />
+          </button>
+          <button
+            onClick={exportChat}
+            className="bg-[#ECEFF4] dark:bg-[#5E81AC] text-[#2E3440] dark:text-[#ECEFF4] p-4 rounded-md flex items-center gap-2 z-10 hover:bg-[#81A1C1] transition-colors hover:scale-105 duration-300"
+            title="Export Chat"
+          >
+            <FaDownload />
           </button>
           <button className="text-[#2E3440] dark:text-[#ECEFF4] p-4 rounded-md flex items-center gap-2 z-10 cursor-pointer transition-colors hover:scale-105 duration-300">
             {isDarkMode ? (

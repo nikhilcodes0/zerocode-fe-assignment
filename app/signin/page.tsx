@@ -35,10 +35,11 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
-        email: formData.email,
-        password: formData.password,
-      });
+      const { data, error: signInError } =
+        await supabase.auth.signInWithPassword({
+          email: formData.email,
+          password: formData.password,
+        });
 
       if (signInError) throw signInError;
 
@@ -56,18 +57,20 @@ export default function Login() {
         provider,
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: "offline",
+            prompt: "consent",
+          },
         },
       });
       if (error) throw error;
     } catch (err: any) {
       setError(err.message);
-    } 
+    }
   };
   return (
     <>
-      <div className="fixed inset-0 bg-[#2E3440] overflow-hidden">
-        
-      </div>
+      <div className="fixed inset-0 bg-[#2E3440] overflow-hidden"></div>
 
       <div className="flex flex-row absolute gap-5 left-1/2 top-14 -translate-x-1/2">
         <p className="text-[8rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-[#D8DEE9]">
@@ -100,7 +103,6 @@ export default function Login() {
           )}
           <form>
             <div className="flex flex-col gap-4">
-              
               <div className="relative">
                 <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-[#88C0D0]" />
                 <input
@@ -146,13 +148,22 @@ export default function Login() {
             or continue with
           </p>
           <div className="flex flex-row gap-4 justify-center">
-            <button className="p-4 rounded-xl bg-[#2E3440] text-[#D8DEE9] font-semibold flex items-center gap-2 hover:bg-[#3B4252] transition-colors">
+            <button
+              onClick={() => handleSocialLogin("google")}
+              className="p-4 rounded-xl bg-[#2E3440] text-[#D8DEE9] font-semibold flex items-center gap-2 hover:bg-[#3B4252] transition-colors"
+            >
               <FaGoogle className="text-[#BF616A]" /> Google
             </button>
-            <button className="p-4 rounded-xl bg-[#2E3440] text-[#D8DEE9] font-semibold flex items-center gap-2 hover:bg-[#3B4252] transition-colors">
+            <button
+              onClick={() => handleSocialLogin("github")}
+              className="p-4 rounded-xl bg-[#2E3440] text-[#D8DEE9] font-semibold flex items-center gap-2 hover:bg-[#3B4252] transition-colors"
+            >
               <FaGithub className="text-[#D8DEE9]" /> Github
             </button>
-            <button className="p-4 rounded-xl bg-[#2E3440] text-[#D8DEE9] font-semibold flex items-center gap-2 hover:bg-[#3B4252] transition-colors">
+            <button
+              onClick={() => handleSocialLogin("apple")}
+              className="p-4 rounded-xl bg-[#2E3440] text-[#D8DEE9] font-semibold flex items-center gap-2 hover:bg-[#3B4252] transition-colors"
+            >
               <FaApple className="text-[#D8DEE9]" /> Apple
             </button>
           </div>
