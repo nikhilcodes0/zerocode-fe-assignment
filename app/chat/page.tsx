@@ -24,19 +24,64 @@ export default function Chat() {
   const [isLoading, setIsLoading] = useState(false);
   const [showSuggestions, setShowSuggestions] = useState(true);
 
+  const fetchMessages = async (userId: string) => {
+    const { data, error } = await supabase
+      .from("chats")
+      .select("*")
+      .eq("user_id", userId)
+      .order("created_at", { ascending: true });
+    if (error) {
+      console.error("Error fetching messages:", error);
+      return [];
+    }
+    return data;
+  };
+
   useEffect(() => {
     setMounted(true);
-    const checkAuth = async () => {
+    const checkAuthAndLoadMessages = async () => {
       const {
         data: { session },
       } = await supabase.auth.getSession();
+
       if (!session) {
         router.push("/");
+        return;
+      }
+
+      // Fetch existing messages
+      const chatHistory = await fetchMessages(session.user.id);
+
+      // Convert chat history to Message format
+      const formattedMessages: Message[] = chatHistory.map((chat) => ({
+        content: chat.message,
+        isUser: chat.role === "user",
+        timestamp: new Date(chat.created_at),
+      }));
+
+      setMessages(formattedMessages);
+
+      // Hide suggestions if there are existing messages
+      if (formattedMessages.length > 0) {
+        setShowSuggestions(false);
       }
     };
 
-    checkAuth();
+    checkAuthAndLoadMessages();
   }, [router]);
+
+  const saveMessage = async (
+    userId: string,
+    role: "user" | "bot",
+    message: string
+  ) => {
+    const { error } = await supabase
+      .from("chats")
+      .insert([{ user_id: userId, role, message }]);
+    if (error) {
+      console.error("Error saving message:", error);
+    }
+  };
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
@@ -54,6 +99,17 @@ export default function Chat() {
     setIsLoading(true);
 
     try {
+      // Get the current user's ID
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+      const userId = session?.user?.id;
+
+      // Save user message
+      if (userId) {
+        await saveMessage(userId, "user", inputMessage);
+      }
+
       const botReply = await getBotReply(inputMessage);
       const botMessage: Message = {
         content: botReply,
@@ -61,6 +117,11 @@ export default function Chat() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, botMessage]);
+
+      // Save bot message
+      if (userId) {
+        await saveMessage(userId, "bot", botReply);
+      }
     } catch (error) {
       console.error("Error getting bot reply:", error);
       const errorMessage: Message = {
