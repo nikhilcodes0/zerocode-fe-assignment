@@ -176,6 +176,23 @@ export default function Chat() {
     document.body.removeChild(a);
   };
 
+  const handleLogout = async () => {
+    try {
+      const { error } = await supabase.auth.signOut();
+      if (error) {
+        console.error("Error signing out:", error);
+        return;
+      }
+      // Clear any local state
+      setMessages([]);
+      setInputMessage("");
+      // Redirect to home page
+      router.push("/");
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
+
   return (
     <>
       <div className="absolute top-0 right-0 z-10 p-2 flex flex-row gap-2 w-full shadow-lg justify-between items-center px-4">
@@ -184,11 +201,9 @@ export default function Chat() {
         </div>
         <div className="flex flex-row-reverse gap-2">
           <button
-            onClick={() => {
-              supabase.auth.signOut();
-              router.push("/");
-            }}
+            onClick={handleLogout}
             className="bg-[#ECEFF4] dark:bg-[#5E81AC] text-[#2E3440] dark:text-[#ECEFF4] p-4 rounded-md flex items-center gap-2 z-10 hover:bg-[#81A1C1] transition-colors hover:scale-105 duration-300"
+            title="Logout"
           >
             <FaSignOutAlt />
           </button>
