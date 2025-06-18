@@ -192,17 +192,35 @@ export default function Chat() {
         console.error("SignOut error:", signOutError);
       }
 
-      // Force clear any stored auth data
+      // Force clear any stored auth data - more targeted approach
       if (typeof window !== "undefined") {
-        // Clear all Supabase-related localStorage items
-        Object.keys(localStorage).forEach((key) => {
-          if (key.includes("supabase") || key.includes("sb-")) {
-            localStorage.removeItem(key);
+        // Clear specific Supabase auth tokens
+        const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+        if (supabaseUrl) {
+          const projectRef = supabaseUrl.split("//")[1]?.split(".")[0];
+          if (projectRef) {
+            localStorage.removeItem(`sb-${projectRef}-auth-token`);
+            localStorage.removeItem(`sb-${projectRef}-auth-token-expires-at`);
           }
-        });
+        }
 
-        // Clear sessionStorage as well
+        // Clear any other known Supabase keys
+        localStorage.removeItem("supabase.auth.token");
+        localStorage.removeItem("supabase.auth.expires_at");
+        localStorage.removeItem("supabase.auth.refresh_token");
+
+        // Clear sessionStorage
         sessionStorage.clear();
+
+        // Clear any cookies that might contain auth data
+        document.cookie.split(";").forEach(function (c) {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(
+              /=.*/,
+              "=;expires=" + new Date().toUTCString() + ";path=/"
+            );
+        });
       }
 
       // Use window.location for a hard redirect to ensure complete logout
