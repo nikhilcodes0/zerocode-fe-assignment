@@ -72,7 +72,12 @@ export default function Register() {
       }
 
       // If signup successful, redirect to chat
-      router.push("/chat");
+      setError(
+        "Registration successful! Please confirm your email and login to continue."
+      );
+      setTimeout(() => {
+        router.push("/signin");
+      }, 2000);
     } catch (err: any) {
       setError(err.message);
     } finally {
