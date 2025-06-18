@@ -178,68 +178,39 @@ export default function Chat() {
 
   const handleLogout = async () => {
     try {
-      // First check if there's an active session
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-
-      if (!session) {
-        // No active session, just redirect to home
-        console.log("No active session found, redirecting to home");
-        setMessages([]);
-        setInputMessage("");
-        router.push("/");
-        return;
-      }
-
-      // If there is a session, try to sign out
-      const { error } = await supabase.auth.signOut();
-      if (error) {
-        console.error("Error signing out:", error);
-        // Even if signOut fails, we should still redirect
-        setMessages([]);
-        setInputMessage("");
-        router.push("/");
-        return;
-      }
-
-      // Clear any local state
+      // Clear local state immediately
       setMessages([]);
       setInputMessage("");
 
-      // Clear any stored session data from localStorage as fallback
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("supabase.auth.token");
-        localStorage.removeItem(
-          "sb-" +
-            process.env.NEXT_PUBLIC_SUPABASE_URL?.split("//")[1]?.split(
-              "."
-            )[0] +
-            "-auth-token"
-        );
+      // Try to sign out from Supabase
+      try {
+        const { error } = await supabase.auth.signOut();
+        if (error) {
+          console.error("Error signing out:", error);
+        }
+      } catch (signOutError) {
+        console.error("SignOut error:", signOutError);
       }
 
-      // Redirect to home page
-      router.push("/");
+      // Force clear any stored auth data
+      if (typeof window !== "undefined") {
+        // Clear all Supabase-related localStorage items
+        Object.keys(localStorage).forEach((key) => {
+          if (key.includes("supabase") || key.includes("sb-")) {
+            localStorage.removeItem(key);
+          }
+        });
+
+        // Clear sessionStorage as well
+        sessionStorage.clear();
+      }
+
+      // Use window.location for a hard redirect to ensure complete logout
+      window.location.href = "/";
     } catch (error) {
       console.error("Error during logout:", error);
-      // Even if there's an error, try to redirect and clear local data
-      setMessages([]);
-      setInputMessage("");
-
-      // Clear localStorage as fallback
-      if (typeof window !== "undefined") {
-        localStorage.removeItem("supabase.auth.token");
-        localStorage.removeItem(
-          "sb-" +
-            process.env.NEXT_PUBLIC_SUPABASE_URL?.split("//")[1]?.split(
-              "."
-            )[0] +
-            "-auth-token"
-        );
-      }
-
-      router.push("/");
+      // Fallback: force redirect even if everything fails
+      window.location.href = "/";
     }
   };
 
