@@ -228,7 +228,7 @@ export default function Chat() {
           </h1>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-2 w-full absolute bottom-10 px-4 animate-fade-in-up animate-delay-400">
+        <div className="flex flex-col items-center justify-center gap-2 w-full absolute bottom-10 px-4 animate-fade-in-up animate-delay-400 lg:w-[70%] xl:w-[50%]">
           <div
             className={`text-start w-full relative bottom-10 transition-all duration-500 ${
               showSuggestions
@@ -309,7 +309,7 @@ export default function Chat() {
               onChange={(e) => setInputMessage(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Ask ZeroCode anything"
-              className="w-full max-w-md p-2 rounded-md border border-[#2E3440] dark:border-[#D8DEE9] outline-none bg-[#D8DEE9] dark:bg-[#3B4252] text-[#2E3440] dark:text-[#D8DEE9] placeholder-[#4C566A]"
+              className="w-full p-2 rounded-md border border-[#2E3440] dark:border-[#D8DEE9] outline-none bg-[#D8DEE9] dark:bg-[#3B4252] text-[#2E3440] dark:text-[#D8DEE9] placeholder-[#4C566A]"
             />
             <button
               onClick={handleSendMessage}

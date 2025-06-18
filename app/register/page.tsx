@@ -102,15 +102,15 @@ export default function Register() {
     <>
       <div className="fixed inset-0 bg-[#2E3440] overflow-hidden"></div>
 
-      <div className="flex flex-row absolute gap-5 top-14 left-1/2 -translate-x-1/2">
-        <p className="text-[7.4rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-[#D8DEE9]">
+      <div className="flex flex-row absolute gap-5 top-14 md:top-0 lg:-top-5 xl:-top-15 left-1/2 -translate-x-1/2">
+        <p className="text-[6rem] sm:text-[8rem] md:text-[11rem] lg:text-[14rem] xl:text-[18rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-[#D8DEE9]">
           SIGN
         </p>
-        <p className="text-[7.4rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-transparent [-webkit-text-stroke:2px_#D8DEE9]">
+        <p className="text-[6rem] sm:text-[8rem] md:text-[11rem] lg:text-[14rem] xl:text-[18rem] font-bold font-poppins animate-fade-in-up animate-delay-400 text-transparent [-webkit-text-stroke:2px_#D8DEE9]">
           UP
         </p>
       </div>
-      <div className="p-8 bg-[#4C566A] w-[95%] mx-auto rounded-xl mt-42 animate-fade-in-up animate-delay-400 shadow-[0_0_17px_rgba(0,0,0,1)] relative z-10">
+      <div className="p-8 bg-[#4C566A] w-[90%] sm:w-[95%] 2xl:w-[60%] mx-auto rounded-xl mt-[150px] sm:mt-42 animate-fade-in-up animate-delay-400 shadow-[0_0_17px_rgba(0,0,0,1)] relative z-10 lg:w-[75%] xl:mt-48">
         <div className="">
           <h1 className="text-3xl font-semibold font-poppins text-[#ECEFF4]">
             Welcome to ZeroCode
